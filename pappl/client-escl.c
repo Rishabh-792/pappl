@@ -482,6 +482,7 @@ DONE:
 //
 // escl_compression_parse - Parse compression factor parameters
 //
+
 static error
 escl_compression_parse (xml_rd *xml, devcaps *caps)
 {
