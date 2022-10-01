@@ -37,6 +37,8 @@ extern char **environ;
 //
 
 #  if CUPS_VERSION_MAJOR < 3
+#    define CUPS_ENCODING_ISO8859_1	CUPS_ISO8859_1
+#    define CUPS_ENCODING_JIS_X0213	CUPS_JIS_X0213
 #    define cups_len_t int
 #    define cups_page_header_t cups_page_header2_t
 #    define cupsArrayNew cupsArrayNew3
@@ -47,6 +49,7 @@ extern char **environ;
 #    define cupsArrayGetNext cupsArrayNext
 #    define cupsArrayGetPrev cupsArrayPrev
 #    define cupsGetUser cupsUser
+#    define cupsLangGetName(lang)	lang->language
 #    define cupsRasterReadHeader cupsRasterReadHeader2
 #    define cupsRasterWriteHeader cupsRasterWriteHeader2
 #    define cupsTempFd(prefix,suffix,buffer,bufsize) cupsTempFd(buffer,bufsize)
@@ -61,7 +64,7 @@ extern char **environ;
 #    define httpGetDateString httpGetDateString2
 #    define httpRead httpRead2
 #    define httpReconnect httpReconnect2
-#    define httpSetEncryption httpEncryption
+#    define httpSetEncryption(http,e) (httpEncryption(http,e)>=0)
 #    define httpStatusString httpStatus
 #    define httpWrite httpWrite2
 #    define httpWriteResponse(http,code) (httpWriteResponse(http,code) == 0)

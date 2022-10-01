@@ -311,7 +311,7 @@ _papplClientProcessHTTP(
 
       papplLogClient(client, PAPPL_LOGLEVEL_INFO, "Upgrading to encrypted connection.");
 
-      if (httpSetEncryption(client->http, HTTP_ENCRYPTION_REQUIRED))
+      if (!httpSetEncryption(client->http, HTTP_ENCRYPTION_REQUIRED))
       {
 	papplLogClient(client, PAPPL_LOGLEVEL_ERROR, "Unable to encrypt connection: %s", cupsLastErrorString());
 	return (false);
@@ -609,9 +609,9 @@ papplClientRespondRedirect(
     char	url[1024];		// Absolute URL
 
     if (*path == '/')
-      httpAssembleURI(HTTP_URI_CODING_ALL, url, sizeof(url), "https", NULL, client->host_field, client->host_port, path);
+      httpAssembleURI(HTTP_URI_CODING_ALL, url, sizeof(url), httpIsEncrypted(client->http) ? "https" : "http", NULL, client->host_field, client->host_port, path);
     else
-      httpAssembleURIf(HTTP_URI_CODING_ALL, url, sizeof(url), "https", NULL, client->host_field, client->host_port, "/%s", path);
+      httpAssembleURIf(HTTP_URI_CODING_ALL, url, sizeof(url), httpIsEncrypted(client->http) ? "https" : "http", NULL, client->host_field, client->host_port, "/%s", path);
 
     httpSetField(client->http, HTTP_FIELD_LOCATION, url);
   }
@@ -651,7 +651,7 @@ _papplClientRun(
       {
         papplLogClient(client, PAPPL_LOGLEVEL_INFO, "Starting HTTPS session.");
 
-	if (httpSetEncryption(client->http, HTTP_ENCRYPTION_ALWAYS))
+	if (!httpSetEncryption(client->http, HTTP_ENCRYPTION_ALWAYS))
 	{
           papplLogClient(client, PAPPL_LOGLEVEL_ERROR, "Unable to encrypt connection: %s", cupsLastErrorString());
 	  break;
